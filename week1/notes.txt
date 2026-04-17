@@ -5,3 +5,5 @@ Conda, mamba, micromamba are package managers. Biostar handbook use micromamba.
 Where it all begins: curl http://data.biostarhandbook.com/install.sh | bash
 
 Fastqc dump keep having some fucking errors because NCBI ass can't make themselves better servers.
+
+At least downloading via a codespace actually helped because it sort of have a different server? 
