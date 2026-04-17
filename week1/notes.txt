@@ -1,0 +1,7 @@
+Do not randomly use the sudo get command from Linux, it may cause clash of versions. 
+
+Conda, mamba, micromamba are package managers. Biostar handbook use micromamba.
+
+Where it all begins: curl http://data.biostarhandbook.com/install.sh | bash
+
+Fastqc dump keep having some fucking errors because NCBI ass can't make themselves better servers.
