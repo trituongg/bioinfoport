@@ -9,4 +9,4 @@ I hope this is a begining of something I hope not ever regretting. Into the unkn
 
 Date: 4/17/2026
 
-![alt text](main_readme_image/Trametes.png)
+![description](main_readme_image/Trametes.png)
