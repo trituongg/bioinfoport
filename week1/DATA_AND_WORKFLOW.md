@@ -166,5 +166,218 @@ What kind of nucleic acid gets sequenced?
 
 Be very careful and pay a lot of attention to details. A lot of the time, errors can arrive just because the data files have different ways of saying the same thing -> incompatiblity. 
 
-## 3. MISC
+## 3. THE ACTUAL REPORT 
 
+*Prequisite: Downloading IGV from the terminal* I personally used conda instead of micromamba here
+
+```
+conda install -c bioconda igv
+conda activate bioinfo
+igv // this will give a lot of text like this 
+Using system JDK. IGV requires Java 21.
+openjdk version "21.0.10-internal" 2026-01-20
+OpenJDK Runtime Environment (build 21.0.10-internal-adhoc.conda.src)
+OpenJDK 64-Bit Server VM (build 21.0.10-internal-adhoc.conda.src, mixed mode, sharing)
+WARNING: Unknown module: jide.common specified to --add-exports
+WARNING: Unknown module: jide.common specified to --add-exports
+WARNING: Unknown module: jide.common specified to --add-exports
+WARNING: Unknown module: jide.common specified to --add-exports
+WARNING: Unknown module: jide.common specified to --add-exports
+WARNING: package com.sun.java.swing.plaf.windows not in java.desktop
+WARNING: package sun.awt.windows not in java.desktop
+WARNING: Unknown module: jide.common specified to --add-exports
+WARNING: Unknown module: jide.common specified to --add-exports
+Apr 18, 2026 9:47:19 AM java.util.prefs.FileSystemPreferences$1 run
+INFO: Created user preferences directory. 
+bla bla bla bla bla bla bla
+```
+
+**Use IGV to visualize your genome and the annotations relative to the genome.**
+*I will use the fungi Trametes sanguinea as a genome reference*
+
+Downloading the fasta = fna file
+``` 
+ wget ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/050/630/565/GCA_050630565.1_ASM5063056v1/*genomic.fna.gz
+ ```
+
+ why the *?. Since NCBI server is down and I can't find exactly the file name so this would have to do. If NCBI is too slow on terminal, you can try downloading from codespace
+
+ Doing the same for the gff file
+
+ ```
+  wget -c ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/050/630/565/GCA_050630565.1_ASM5063056v1/*genomic.gff.gz
+  ```
+
+Remmeber to create a new folder and move your files (change the name if you'd like) into it and then ```gunzip * ``` them, 
+
+Then you have to index them to create the ```.fai``` files which is needed by igv to navigate it
+
+```
+ ~/igv_test
+$ samtools faidx Trametes.fna
+(bioinfo)
+tristuowngf@DESKTOP-OGB28J5 ~/igv_test
+$ ls
+Trametes.fna  Trametes.fna.fai  Trametes.gff
+(bioinfo)
+tristuowngf@DESKTOP-OGB28J5 ~/igv_test
+$ head Trametes.fna.fai
+lcl|JBLLKJ010000001.1_cds_KAL7284913.1_1        3000    243     80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284914.1_2        5268    3754    80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284915.1_3        3111    9358    80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284916.1_4        4320    12831   80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284917.1_5        1236    17411   80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284918.1_6        4707    19051   80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284919.1_7        2472    24152   80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284920.1_8        999     26925   80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284921.1_9        2289    28273   80      81
+lcl|JBLLKJ010000001.1_cds_KAL7284922.1_10       5304    30953   80      81
+(bioinfo)
+tristuowngf@DESKTOP-OGB28J5 ~/igv_test
+$
+````
+
+However, igv still doesn't recognize this. Why? So let's retry
+
+Make sure the files you are using are these: 
+
+```
+-rw-rw-rw-  1 codespace codespace  11M May 30  2025 GCA_050630565.1_ASM5063056v1_genomic.fna.gz
+-rw-rw-rw-  1 codespace codespace 2.2M Jul 11  2025 GCA_050630565.1_ASM5063056v1_genomic.gff.gz
+```
+
+The problem was I loaded the .fna file from ```file```, not ```genomes``` so it didn't worked. Mistakes happen. This is what after you load the .fna
+
+![description](images/Screenshot%202026-04-18%20173449.png)
+
+After you load the .gff after
+
+![description](images/Screenshot%202026-04-18%20174034.png)
+
+**How big is the genome, and how many features of each type does the GFF file contain?**
+
+Using these 2 commands for the genome size 
+
+```
+tristuowngf@DESKTOP-OGB28J5 ~/igv_test
+$ cat Trametes.fna | grep -v ">" | wc --char
+40393765
+(bioinfo)
+tristuowngf@DESKTOP-OGB28J5 ~/igv_test
+$ seqkit stats Trametes.fna
+file          format  type  num_seqs     sum_len  min_len  avg_len    max_len
+Trametes.fna  FASTA   DNA        104  39,895,024   26,363  383,606  4,110,638
+(bioinfo)
+tristuowngf@DESKTOP-OGB28J5 ~/igv_test
+$
+```
+The resulst are either ```40393765``` or ```39,895,024```
+**Why is there 2 biological answers?** --> Seqkit do not include Ns
+
+For the gff
+```
+$ cat Trametes.gff | cut -f3 | sort-uniq-count-rank
+71421   exon
+69947   CDS
+10505   gene
+9031    mRNA
+958     tRNA
+516     rRNA
+104     ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=158606
+104     region
+1       #!genome-build ASM5063056v1
+1       #!genome-build-accession NCBI_Assembly:GCA_050630565.1
+1       #!gff-spec-version 1.21
+1       #!processor NCBI annotwriter
+1       ###
+bla bla bla
+```
+However after installing agat, the results will be slightly different
+```
+ conda install -c bioconda agat
+ agat_sp_statistics.pl --gff Trametes.gff
+ bla bla bla bla 
+ Compute region
+
+Number of regions                            104
+Number gene overlapping                      0
+Total region length                          39895024
+mean region length                           383606
+Longest region                               4110638
+Shortest region                              26363
+
+--------------------------------------------------------------------------------
+
+Compute mrna with isoforms if any
+
+Number of genes                              9031
+Number of mrnas                              9031
+Number of cdss                               9031
+Number of exons                              69947
+Number of exon in cds                        69947
+Number of intron in cds                      60916
+Number of intron in exon                     60916
+Number gene overlapping                      0
+Number of single exon gene                   801
+Number of single exon mrna                   801
+mean mrnas per gene                          1.0
+mean cdss per mrna                           1.0
+mean exons per mrna                          7.7
+mean exons per cds                           7.7
+mean introns in cdss per mrna                6.7
+mean introns in exons per mrna               6.7
+Total gene length                            22994557
+Total mrna length                            22994557
+Total cds length                             16601394
+Total exon length                            16601394
+Total intron length per cds                  6393163
+Total intron length per exon                 6393163
+mean gene length                             2546
+mean mrna length                             2546
+mean cds length                              1838
+mean exon length                             237
+mean cds piece length                        237
+mean intron in cds length                    104
+mean intron in exon length                   104
+Longest gene                                 16135
+Longest mrna                                 16135
+Longest cds                                  15219
+Longest exon                                 8748
+Longest cds piece                            8748
+Longest intron into cds part                 9614
+Longest intron into exon part                9614
+Shortest gene                                120
+Shortest mrna                                120
+Shortest cds                                 102
+Shortest exon                                2
+Shortest cds piece                           2
+Shortest intron into cds part                4
+Shortest intron into exon part               4
+ba bla bla 
+ ```
+
+**From your GFF file, separate the intervals of type "gene" or "transcript" into a different file. Show the commands you used to do this.**
+
+I can use 
+``` 
+$ cat Trametes.gff | awk '$3 == "gene"' >> Trametes_genes.gff
+(bioinfo)
+```
+
+**Visualize the simplified GFF in IGV as a separate track. Compare the visualization of the original GFF with the simplified GFF.**
+
+```new problem, installing agat caused some error in my environment```
+
+After only having the genes, it is less cluttered and does not really have overlapping segments
+
+![description](images/Screenshot%202026-04-18%20203711.png)
+
+
+**Zoom in to see the sequences, expand the view to show the translation table in IGV. Note how the translation table needs to be displayed in the correct orientation for it to make sense.**
+
+![description](images/Screenshot%202026-04-18%20204243.png)
+![description](images/Screenshot%202026-04-18%20204421.png)
+
+**Visually verify that the first coding sequence of a gene starts with a start codon and that the last coding sequence of a gene ends with a stop codon.**
+
+They do, one strand or another
