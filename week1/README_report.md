@@ -4,11 +4,11 @@
 
 *Conda, mamba, micromamba are package managers. Biostar handbook use micromamba.*
 
-*Where it all begins: 
+To start:
 
 ```curl http://data.biostarhandbook.com/install.sh | bash ```
 
-*Fastqc dump keep having some fucking errors because NCBI ass can't make themselves better servers.*
+*Fastqc dump keep having errors because NCBI can't make themselves better servers.*
 
 *At least downloading via a codespace actually helped because it sort of have a different server?*
 
@@ -220,3 +220,4 @@ Ensembl GFF files come in different annotation levels:
 | `.abinitio.gff3` | Gene predictions only | Lower confidence | Gene prediction / exploratory analysis |
 
 ---
+
