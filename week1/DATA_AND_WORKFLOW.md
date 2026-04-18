@@ -108,7 +108,13 @@ What about these ```BAM``` and ```SAM``` files?
 
 ```BAM``` = binary and ```SAM``` = sequence (```SAM``` is humanreadable but not really compact) Both of these are maps
 
-How do I work with SAM or BAM files? 
+How do I work with SAM or BAM files? Here is a biostar pipeline
+```FASTA (reference) + FASTQ (reads) + aligner -> SAM (alignment) + Converter -> BAM (Yay!)```
+
+How do I keep track of the ```SAM``` file complicated headers?
+![descriptiom](images/Screenshot%202026-04-18%20161145.png)
+
+What about Wiggle files or VCF? More on them later!
 
 There are generic formats that we could call encylopedic formats such as ```GENBANK``` and ```EMBL```.
 These are like storage systems.
