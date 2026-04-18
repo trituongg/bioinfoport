@@ -8,3 +8,5 @@ Following https://www.biostarhandbook.com/fast/ and will be documenting my (hope
 I hope this is a begining of something I hope not ever regretting. Into the unknown I go.
 
 Date: 4/17/2026
+
+![alt text](main_readme_image/Trametes.png)
