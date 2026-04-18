@@ -12,6 +12,8 @@ To start:
 
 *At least downloading via a codespace actually helped because it sort of have a different server?*
 
+*Learn things the hard way, Galaxy and other Interface tools are just that, interfaces, you need to learn the hard part first*
+
 ## 1. Basic information about GFF Files.
 
 ![Description](images/image_1.png)
