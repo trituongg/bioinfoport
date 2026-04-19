@@ -81,7 +81,7 @@ There is the  INSDC: International Nucleotide Sequence Database Collaboration Wh
 NCBI, EMBL, DDBJ
 
 Type of data they endorse
-```Genbank for annotated DNA```
+```Genbank for raw annotated DNA```
 ```SRA: short read archive for sequencing projects```
 ```Uniprot: the authority in proteins basically```
 

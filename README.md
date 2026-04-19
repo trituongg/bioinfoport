@@ -8,3 +8,5 @@ Following https://www.biostarhandbook.com/fast/ and will be documenting my (hope
 Start Date: 4/17/2026
 
 ![description](main_readme_image/Trametes.png)
+
+unrelated picture from an unrelated project
