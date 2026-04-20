@@ -6,7 +6,7 @@
 *Group 2: Zika paper*
 *Group 3: Staphylococcus publication*
 *You have been assigned to group 1, 2, or 3 (if not, randomly assign yourself to a group).*
-Since I am a crazy person, I am going to do all three.  **FOR THIS README, EBOLA PAPER FIRST**
+ ** EBOLA PAPER **
 
 *Genomic surveillance elucidates Ebola virus origin and transmission during the 2014 outbreak published in 2014 in the Science research journal.*
 
@@ -31,16 +31,6 @@ What's so special about this Bombali ebolavirus?
 
 NON-INFECTIOUS EBOLA??
 
-
-THE WORKFLOW
-```
-Download the genome as or GenBank
-Download the sequence data from the SRA
-Align the reads to the genome
-Call the variants
-Annotate the variants
-Visualize and interpret the results
-```
 
 ### Data retrieval:
 
@@ -229,8 +219,6 @@ inflating: README.md
 ```
 **I will be using the SRA downloader to do the suggested NGS pipeline.**
 
-#### SUB, MAIN NGS PIPELINE
-
 using ``` esearch -db sra -query PRJNA257197```
 gives 
 ```
@@ -286,7 +274,8 @@ $ cat SRR1972883_2.fastq | wc -l
 (bioinfo)
 ```
 but they are in fastq so we have to zip them.  ```gzip *.fastq```
-HISHISHISHISHISHISHIHSIHSIHISHISHISHISHIHSIHSIHSIHSIHISHISHISHISHISHISHISHISHSI (HISTAG)
+
+This will be used for later
 
 //////////////////////////////ALT
 ```datasets download genome accession GCF_003505815.1 --include genome,protein,gff3,cds,seq-report,rna```
@@ -315,7 +304,15 @@ GCF_003505815.1_ASM350581v1_genomic.fna  cds_from_genomic.fna  genomic.gff  prot
 The data already have the .fai so you don't need to index it
 
 **Use IGV to visualize the genome and its annotations (e.g., GFF file) relative to the genome sequence.**
+////////////////MAIN
+First index the .fna ``` samtools faidx GCF_000848505.1_ViralProj14703_genomic.fna```
+then view in ```igv``` (remember to use the right environment to avoid clashing) (make another environment for igv)
 
+The main one does not differ very much from the non infectious variant in terms of gene composition. 
+
+![description](images/Screenshot%202026-04-20%20085143.png)
+
+////////////////ALT
 ![description](images/igv_ebola.png)
 This is not surprising since this is a ssRNA virus (-) so ony 1 strand has the genes (the positive strand)
 It also have many overlapping genes. (however, these are not overlapping genes, these can be mRNA, cds, exon, etc (**BE VERY CAREFUL WHILE VIEWING IGV**))
@@ -323,6 +320,44 @@ It also have many overlapping genes. (however, these are not overlapping genes, 
 ### Data evaluation:
 
 **Determine the genome size and count the number of features of each type in the GFF file.**
+//////MAIN
+
+Using ```seqkit stats GCF_000848505.1_ViralProj14703_genomic.fna```
+
+we get
+```
+file                                        format  type  num_seqs  sum_len  min_len  avg_len  max_len
+GCF_000848505.1_ViralProj14703_genomic.fna  FASTA   DNA          1   18,959   18,959   18,959   18,959
+(bioinfo)
+```
+And using ```cat genomic.gff | cut -f3 | sort-uniq-count-rank```
+
+we get
+
+```
+11      CDS
+8       polyA_signal_sequence
+8       regulatory_region
+7       exon
+7       gene
+7       mRNA
+4       sequence_feature
+1       #!genome-build ViralProj14703
+1       #!genome-build-accession NCBI_Assembly:GCF_000848505.1
+1       #!gff-spec-version 1.21
+1       #!processor NCBI annotwriter
+1       ###
+1       ##gff-version 3
+1       ##sequence-region NC_002549.1 1 18959
+1       ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=186538
+1       five_prime_UTR
+1       region
+1       three_prime_UTR
+```
+Surprising, virus have UTR regions just like eukaryotes
+
+
+//////ALT
 Using ```seqkit stats GCF_003505815.1_ASM350581v1_genomic.fna```
 We get: 
 ```
@@ -331,8 +366,73 @@ GCF_003505815.1_ASM350581v1_genomic.fna  FASTA   DNA          1   19,043   19,04
 (bioinfo)
 ```
 
+And using ```cat ~/ebola_alt_test/ncbi_dataset/data/GCF_003505815.1/genomic.gff| cut -f3 | sort-uniq-count-rank```
+We get 
+```
+11      CDS
+7       gene
+7       polyA_signal_sequence
+7       regulatory_region
+1       #!genome-build ASM350581v1
+1       #!genome-build-accession NCBI_Assembly:GCF_003505815.1
+1       #!gff-spec-version 1.21
+1       #!processor NCBI annotwriter
+1       ###
+1       ##gff-version 3
+1       ##sequence-region NC_039345.1 1 19043
+1       ##species https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=2010960
+1       five_prime_UTR
+1       region
+1       sequence_feature
+1       three_prime_UTR
+(bioinfo)
+```
+
+What can we conclude
+
+NOTHING! The difference in infectivity might be due to some internal changes to a glycoprotein and not just some large structural change. We can try aligning them if we want
+
 **Identify the longest gene. What is its name and function? (You may need to search external resources.)**
-I will be using gffread 
+I will be using gffread and seqkit
+//MAIN 
+doing ```seqkit fx2tab  -n -l cds_from_genomic.fna```
+
+gives
+```
+lcl|NC_002549.1_cds_NP_066243.1_1 [gene=NP] [locus_tag=ZEBOVgp1] [db_xref=GeneID:911830] [protein=nucleoprotein] [protein_id=NP_066243.1] [location=470..2689] [gbkey=CDS]    2220
+lcl|NC_002549.1_cds_NP_066244.1_2 [gene=VP35] [locus_tag=ZEBOVgp2] [db_xref=GeneID:911827] [protein=polymerase complex protein] [protein_id=NP_066244.1] [location=3129..4151] [gbkey=CDS]    1023
+lcl|NC_002549.1_cds_NP_066245.1_3 [gene=VP40] [locus_tag=ZEBOVgp3] [db_xref=GeneID:911825] [protein=matrix protein] [protein_id=NP_066245.1] [location=4479..5459] [gbkey=CDS]        981
+lcl|NC_002549.1_cds_NP_066246.1_4 [gene=GP] [locus_tag=ZEBOVgp4] [db_xref=GeneID:911829] [protein=spike glycoprotein] [exception=RNA editing] [protein_id=NP_066246.1] [location=join(6039..6923,6923..8068)] [gbkey=CDS]   2031
+lcl|NC_002549.1_cds_NP_066247.1_5 [gene=GP] [locus_tag=ZEBOVgp4] [db_xref=GeneID:911829] [protein=small secreted glycoprotein] [protein_id=NP_066247.1] [location=6039..7133] [gbkey=CDS]     1095
+lcl|NC_002549.1_cds_NP_066248.1_6 [gene=GP] [locus_tag=ZEBOVgp4] [db_xref=GeneID:911829] [protein=second secreted glycoprotein] [exception=RNA editing] [protein_id=NP_066248.1] [location=join(6039..6922,6924..6933)] [gbkey=CDS] 894
+lcl|NC_002549.1_cds_NP_066249.1_7 [gene=VP30] [locus_tag=ZEBOVgp5] [db_xref=GeneID:911826] [protein=minor nucleoprotein] [protein_id=NP_066249.1] [location=8509..9375] [gbkey=CDS]   867
+lcl|NC_002549.1_cds_NP_066250.1_8 [gene=VP24] [locus_tag=ZEBOVgp6] [db_xref=GeneID:911828] [protein=membrane-associated protein] [protein_id=NP_066250.1] [location=10345..11100] [gbkey=CDS] 756
+lcl|NC_002549.1_cds_NP_066251.1_9 [gene=L] [locus_tag=ZEBOVgp7] [db_xref=GeneID:911824] [protein=RNA-dependent RNA polymerase] [protein_id=NP_066251.1] [location=11581..18219] [gbkey=CDS]   6639
+(bioinfo)
+```
+
+And doing 
+```
+seqkit fx2tab -n -l cds_from_genomic.fna | \
+awk -F'\t' '{
+  match($1,/\[gene=([^]]+)\]/,a);
+  print a[1], $2
+}' | sort -k2 -n 
+```
+gives 
+```
+VP24 756
+VP30 867
+GP 894
+VP40 981
+VP35 1023
+GP 1095
+GP 2031
+NP 2220
+L 6639
+```
+
+//ALT
 ```micromamba create -n gfftools -c bioconda -c conda-forge gffread```
 ```micromamba activate gfftools```
 ```gffread genomic.gff -E``` // for a sanity check
@@ -384,14 +484,14 @@ GP 2019
 NP 2220
 L 6633
 ```
-So L is the longest gene and its an **protein=RNA-dependent RNA polymerase**
+So L is the longest gene and its an **protein=RNA-dependent RNA polymerase** in both MAIN and ALT with ~2 amino acid difference, but only still the same frameshift
 
 **Pick another gene, and describe its name and function.**
 
-gene VP24 and its function is membrane-associated protein
+gene VP24 and its function is membrane-associated protein, conserved amongst strain
 
 **Examine the distribution of genomic features: Are they closely packed or is there significant intergenic space?**
-It is quite tightly packed since only 19kb but already 7 genes on 1 strand with total cds of 16,530, there isn't much intergenic space or only 13% intergenic space (the 13% is WRONG since cds include overlapping sequence = bad)
+It is quite tightly packed since only 19kb but already 7 genes on 1 strand with total cds of 16,530, there isn't much intergenic space or only 13% intergenic space (the 13% is WRONG since cds include overlapping sequence = bad) (the same for the main)
 
 **Using IGV, estimate what proportion of the genome is covered by coding sequences.**
 For the question, chatGPT gives 
@@ -406,11 +506,11 @@ for around 76%
 
 **Find alternative genome builds for your organism (include their accession numbers).** 
 
-Mentioned aboev
+Mentioned above
 
 **Briefly discuss what different questions could be answered using a different genome build, considering the focus of your assigned paper.**
 
-I didn't notice correctly and accidently do the alternative one as the main one but I think you can answer some questiosn regarding which protein in a virus makes it infectious for human host, or which changes to a gene can make a virus infectious since my virus is not infectious. 
+I didn't notice correctly and accidently do the alternative one as the main one but I think you can answer some questiosn regarding which protein in a virus makes it infectious for human host, or which changes to a gene can make a virus infectious since my virus is not infectious. But for this strain specifically, looking at the viral composition from a structural standpoint doesn't really give us any significant conclusion. It could be that the difference in host infectiousness is due to a more molecular change? (like base pair and amino acid substitution)
 
 ### Report:
 
