@@ -13,8 +13,6 @@ Start Date: 4/17/2026
 
 ## PROGRESS BAR
 
-## FastTrack Bioinformatics 2025 — Lectures
-
 - [x] 1. Introduction to the course
 - [x] 2. The Unix command line  
   - [x] ⭐ How to solve it
