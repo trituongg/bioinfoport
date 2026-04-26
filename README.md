@@ -26,3 +26,11 @@ Start Date: 4/17/2026
   - [ ] ⭐ Bioinformatics Toolbox  
   - [ ] ⭐ Toolbox Documentation
 - [ ] 8. Automation and Design Files
+- [ ] ⭐ Assignment 8 Review
+- [ ] 9. Variant Calling and VCF
+- [ ] 10. Variant Effect Prediction
+- [ ] 11. Evaluating cancer variants  
+  - [ ] ⭐ Code: Genome in a Bottle
+- [ ] 12. Introduction to RNA-Seq
+- [ ] 13. RNA-Seq differential expression
+- [ ] 14. Gene Ontologies and Functional Enrichment
