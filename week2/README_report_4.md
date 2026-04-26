@@ -267,7 +267,7 @@ then ```fastqc *```
 
 *IT ACTUALLY GOT BETTER?*
 
-![description](images_week2/*131101.png*)
+![description](images_week2/Screenshot%202026-04-20%20131101.png)
 
 Post-trimming quality control using ```fastp``` showed substantial improvement in **per-base quality scores** and removal of **low-quality reads** and **adapter contamination.** 
 
@@ -318,7 +318,7 @@ ERR979718_1.fastq.gz  FASTQ   DNA     45,070  8,554,926       25    189.8      3
 ```
 
 It's somehow even worse
-![description](images_week2/*125104.png)
+![description](images_week2/Screenshot%202026-04-20%20125104.png)
 
 **Briefly compare the quality or characteristics of the datasets from the two platforms.**
 The fact that ion current look worse is to be expected since they look worse on fastqc, which is more specific for illumina
@@ -381,7 +381,7 @@ via ```fastqc``` gives
 
 a somewhat underwhelming but still *better* than nothing improvement
 
-![description](images_week2/*133120*)
+![description](images_week2/Screenshot%202026-04-20%20133120.png)
 
 It could be that bbduk isn't really good, let's try fastp'
 
@@ -437,4 +437,4 @@ fastp v1.3.2, time used: 15 seconds
 and ```fastqc fastp_cleaned.fastq.gz```
 gives...basically the same result, well it is probably due to the sequencing type 
 
-![description](images_week2/*133413*)
+![description](images_week2/Screenshot%202026-04-20%20133413.png)
