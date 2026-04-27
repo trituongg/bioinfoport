@@ -517,3 +517,293 @@ hello:
 What does the ampersand do "@" 
 
 -> @ suppresses the command itself from being printed.
+
+## MAKEFILE TIPS
+
+Try dry running ```-n```
+
+You can also take arguments from command lines
+```
+# Set the value of FOO to bar (if not already set).
+NAME ?= Jane
+
+# Sets the prefix for commands.
+.RECIPEPREFIX = >
+
+usage:
+> echo Hello ${NAME}
+```
+Jane can then be overidden ```make usage NAME=Joe```
+
+Use these for makefiles for safety
+```
+# Deletes dependencies if the command fails.
+.DELETE_ON_ERROR:
+
+# Warns about undefined variables.
+MAKEFLAGS += --warn-undefined-variables --no-builtin-rules
+```
+
+## BIOINFORMATICS AND MAKEFILES
+Keep it simple
+Do not always aim for complete automation, a step by step is alright
+We can create a Makefile that allows use to do each step of the process
+```
+make data PRJN=PRJEB31790
+```
+```
+make trim PRJN=PRJEB31790
+```
+Remember a makefile is something with a target
+
+in a ```Makefile``` have this
+```
+# Set the prefix from tabs to >
+.RECIPEPREFIX = >
+
+# Sets the default target.
+PRJN ?= PRJEB31790
+
+# How many runs to download
+N ?= 5
+
+usage:
+> @echo ""
+> @echo "Usage: make data trim N=${N} PRJN=${PRJN}"
+> @echo ""
+
+data:
+# Search database for SRA data and make a csv file with run information.
+> esearch -db sra -query ${PRJN} | efetch -format runinfo > runinfo.csv
+
+# Extract sequencing run ids from runinfo. Start with second line (skip header).
+> cat runinfo.csv | csvcut -c Run | grep -v Run | head -5 > ids.txt
+
+# Make a directory for the reads.
+> mkdir -p reads
+
+# Download data from SRA.
+> cat ids.txt | parallel --progress fastq-dump -O reads -X 10000 --split-files {}
+
+# Run fastqc on each read.
+> cat ids.txt | parallel --progress fastqc reads/{}_1.fastq reads/{}_2.fastq
+
+trim:
+
+# Make directory for trimmed reads.
+> mkdir -p qc
+
+# Apply quality control to each read.
+> cat ids.txt | parallel --progress fastp \
+                -i reads/{}_1.fastq -I reads/{}_2.fastq \
+                -o qc/{}_1.trim.fq  -O qc/{}_2.trim.fq  \
+                --adapter_sequence AGATCGGAAGAGCACACGT
+
+# Run fastqc on each trimmed dataset.
+> cat ids.txt | parallel --progress fastqc qc/{}_1.trim.fq qc/{}_2.trim.fq
+
+# Non file targets.
+.PHONY: clean usage data trim
+
+```
+so you can have the make file do 
+1. data
+2. trim
+
+and you can change the SRA number from the command line. How awesome!
+
+an improved makefile that has everything
+```
+# Sets the prefix for commands.
+.RECIPEPREFIX = >
+
+# Sets the default target.
+PRJN ?= PRJEB31790
+
+# How many runs to download
+N ?= 5
+
+# Default action is to print usage.
+usage:
+> @echo ""
+> @echo "Usage: make data trim N=${N} PRJN=${PRJN}"
+> @echo ""
+
+runinfo.csv:
+# Search database for SRA data and make a csv file with run information.
+> esearch -db sra -query ${PRJN} | efetch -format runinfo > runinfo.csv
+
+ids.txt: runinfo.csv
+# Extract sequencing run ids from runinfo. Start with second line (skip header).
+> cat runinfo.csv | csvcut -c Run | grep -v Run | head -5 > ids.txt
+
+data: ids.txt
+# Make a directory for the reads.
+> mkdir -p reads
+
+# Download data from SRA.
+> cat ids.txt | parallel --progress fastq-dump -O reads -X 10000 --split-files {}
+
+# Run fastqc on each read.
+> cat ids.txt | parallel --progress fastqc reads/{}_1.fastq reads/{}_2.fastq
+
+trim:
+# Make directory for trimmed reads.
+> mkdir -p qc
+
+# Apply quality control to each read.
+> cat ids.txt | parallel --progress fastp \
+                -i reads/{}_1.fastq -I reads/{}_2.fastq \
+                -o qc/{}_1.trim.fq  -O qc/{}_2.trim.fq  \
+                --adapter_sequence AGATCGGAAGAGCACACGT
+
+# Run fastqc on each trimmed dataset.
+> cat ids.txt | parallel --progress fastqc qc/{}_1.trim.fq qc/{}_2.trim.fq
+
+# Run all commands in one shot.
+all: data trim
+
+clean:
+> rm -rf qc reads runinfo.csv ids.txt fastp*
+
+# Non file targets.
+.PHONY: clean usage data trim
+```
+
+```ids.txt: runinfo.csv``` or ```data: ids.txt``` will only happen if runinfo.csv or ids.txt exist!
+
+## HOW TO MAKE MAKEFILE DEPENDENCIES?
+
+take this script
+```
+# Input accession numbers
+ACC ?= AF086833
+SRR ?= SRR1972917
+
+# How many reads to unpack.
+N ?= 1000
+
+# The reference file
+REF = refs/${ACC}.fa
+
+# The index file for the reference
+IDX = ${REF}.amb
+
+# The aligned BAM file.
+BAM = bam/${SRR}-${ACC}.bam
+
+# The variant file.
+VCF = vcf/${SRR}-${ACC}.vcf.gz
+
+# The read pairs.
+R1 = reads/${SRR}_1.fastq
+R2 = reads/${SRR}_2.fastq
+
+# Set the prefix from tabs to >
+.RECIPEPREFIX = >
+
+usage:
+> @echo "Usage: make vcf ACC=AF086833 SRR=SRR1972917 N=1000"
+
+# This is how we obtain the reference..
+${REF}:
+> mkdir -p refs
+> bio fetch ${ACC} -format fasta > ${REF}
+
+# This is how we obtain the reads.
+${R1} ${R2}:
+> mkdir -p reads
+> fastq-dump -F --split-files -O reads -X ${N} ${SRR}
+
+# The index depends on the reference.
+${IDX}: ${REF}
+> bwa index ${REF}
+
+# The alignment depends on index and the reads.
+${BAM}: ${IDX} ${R1} ${R2}
+> mkdir -p bam
+> bwa mem ${REF} ${R1} ${R2} | samtools sort > ${BAM}
+> samtools index ${BAM}
+
+# The VCF file depends on the BAM file.
+${VCF}: ${BAM}
+> mkdir -p vcf
+> bcftools mpileup -O v -f ${REF} ${BAM}  | \
+           bcftools call --ploidy 1 -m -v -O z -o ${VCF}
+> bcftools index ${VCF}
+
+# Trigger the VCF generation
+vcf: ${VCF}
+```
+
+```
+# The index depends on the reference.
+${IDX}: ${REF}
+```
+
+```
+# The VCF file depends on the BAM file.
+${VCF}: ${BAM}
+```
+
+## Troubleshotting
+
+```make: *** No rule to make target 'bennifer:'. Stop.``` means  ```bennifer``` is not a target in your script
+```Makefile:3: *** missing separator.  Stop.``` means that your task weren't  delimited
+
+tab delimited will look like this
+```
+cat -t Makefile
+
+foo:
+^Iecho Hello John!
+
+bar:
+^Iecho Hello Jane!
+^Iecho Hello Everyone!
+```
+
+adding a ```-``` can make you run the file even if it failed
+
+## MY/YOUR MAKE FILES ARE WRONGG!!!!
+
+1. Don’t use tabs use ```.RECIPEPREFIX = >``` 
+2. Use a recent bash ```SHELL := bash```
+3. Use strict mode (not universal) ```.SHELLFLAGS := -eu -o pipefail -c```
+4. bla bla bla
+
+```
+SHELL := bash
+.ONESHELL:
+.SHELLFLAGS := -eu -o pipefail -c
+.DELETE_ON_ERROR:
+MAKEFLAGS += --warn-undefined-variables
+MAKEFLAGS += --no-builtin-rules
+
+ifeq ($(origin .RECIPEPREFIX), undefined)
+  $(error This Make does not support .RECIPEPREFIX. Please use GNU Make 4.0 or later)
+endif
+.RECIPEPREFIX = >
+```
+
+What about ```.PHONY```
+```
+test:
+> npm run test
+.PHONY: test  # Make will not look for a file named `test` on the file system
+```
+You use this when you want make to run. Make usually won't run when there is already a file with the same name in the system because it thinks the file is already up to date.
+
+about ```$$```
+
+```
+echo $HOME   #  Make tries to expand it
+echo $$HOME  #  shell expands it
+```
+
+Q: Andy defined HOME = my_house.txt in his Makefile, but when he used $$HOME it caused an error. Why?
+
+A: Because $$HOME does not refer to the Make variable HOME.
+
+### MISC 
+THIS IS NOT DOGMA
