@@ -111,6 +111,23 @@ IMPORTANT: THEY CAN BE VIEW IN IGV
 ## Assignment Checklist
 
 ### 1. Makefile Setup
+
+Previously on our journey with Ebola:
+
+Previously on the Ebola test we used 
+
+NCBI RefSeq assembly: ```GCF_000848505.1``` NCBI Assembly ID for Ebola virus/H.sapiens-tc/COD/1976/Yambuku-Mayinga
+
+Submitted GenBank assembly: ```GCA_000848505.1```
+
+SRA BioProject ID: ```PRJNA257197```
+
+RefSeq chromosome: ```	NC_002549.1```Ebola virus - Mayinga, Zaire, 1976, complete genome.
+
+Genebank chromosome: ```AF086833.2``` Ebola virus - Mayinga, Zaire, 1976, complete genome.
+
+SRR sample used: ```SRR1972883```
+
 - [ ] Create a `Makefile` from the original bash script  
 - [ ] Add rule to download genome  
 - [ ] Add rule to download sequencing reads from SRA  
