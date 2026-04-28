@@ -60,7 +60,7 @@ Start Date: 4/17/2026
 - [Minimap2 Alignment](week3/minimap2_alignment_template.sh)
 - [Example Template](week3/example_template.sh)
 - [Makefile Template](week3/makefile_template)
-- *TBA alignment*
+- [Makefile for alignment](week3/Makefile)
 
 ---
 

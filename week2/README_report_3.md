@@ -219,7 +219,7 @@ inflating: README.md
 ```
 **I will be using the SRA downloader to do the suggested NGS pipeline.**
 
-using ``` esearch -db sra -query PRJNA257197```
+using ```esearch -db sra -query PRJNA257197```
 gives 
 ```
 <ENTREZ_DIRECT>
