@@ -122,7 +122,7 @@ build: dirs download_refseq download_srr index align index_bam toBW stats
 # =========================================
 # building the entire workflow for ONT data in one command
 # this is just a template and would need to be modified based on the specific requirements for ONT data, such as using minimap2 for alignment instead of bwa, and adjusting the parameters for ONT reads.
-build_ONT: dirs download_refseq download_srr index align_ONT index_bam_ONT bam_ONT_to_bw stats
+build_ONT: dirs download_refseq download_srr index align_ONT index_bam_ONT bam_ONT_to_bw ONT_stats
 .PHONY: build_ONT 
 # ========================================
 
