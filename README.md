@@ -16,7 +16,7 @@ Start Date: 4/17/2026
 
 ---
 
-## 📅 Week 1
+## Week 1
 
 ### 1. Reports
 - [Report 1](week1/README_report_1.md)
@@ -27,11 +27,11 @@ Start Date: 4/17/2026
 - [Notes](week1/notes.txt)
 
 ### 3. Templates
-- *TBA*
+- *TBD*
 
 ---
 
-## 📅 Week 2
+## Week 2
 
 ### 1. Reports
 - [Report 3](week2/README_report_3.md)
@@ -41,18 +41,22 @@ Start Date: 4/17/2026
 - [Sequencing and FASTQ](week2/SEQUENCING_AND_FASTQ.md)
 
 ### 3. Templates
-- *TBA qc tools and trimming*
+- *TBD qc tools and trimming*
 
 ---
 
-## 📅 Week 3
+## Week 3
 
 ### 1. Reports
 - [Report 5](week3/README_report_5.md)
+- [Report 6](week3/README_report_6.md)
 
 ### 2. Theory
 - [Scripting](week3/scripting.md)
 - [Vibecoding](week3/vibecoding.md)
+- [The wiggle format](week3/wiggle.md)
+- [Re: about .bam files](week3/bam.md)
+
 
 ### 3. Templates
 - [BWA Alignment](week3/bwa_alignment_template.sh)
@@ -61,6 +65,11 @@ Start Date: 4/17/2026
 - [Example Template](week3/example_template.sh)
 - [Makefile Template](week3/makefile_template)
 - [Makefile for alignment](week3/Makefile)
+- [Biostar Makefile template](week3/working_template_make)
+- [Convert to bedgraph template](week3/bigwig_template.sh)
+- [Coverage template](week3/coverage_template.sh)
+- [Example bam template](week3/example_bam_template.sh)
+- **[IMPROVED MAKEFILE](week3/Makefile_2.mk)**
 
 ---
 
@@ -73,10 +82,10 @@ Start Date: 4/17/2026
 - [x] 3. Genomic Data Visualization
 - [x] 4. Genomic Data Sources
 - [x] 5. Sequencing and FASTQ  
-  - [ ] ⭐ AI-Powered Scripting
-- [ ] 6. Short Read Alignments  
-  - [ ] ⭐ AI-Powered Makefiles
-- [ ] 7. Binary Alignment Map (BAM)  
+  - [x] ⭐ AI-Powered Scripting
+- [x] 6. Short Read Alignments  
+  - [x] ⭐ AI-Powered Makefiles
+- [x] 7. Binary Alignment Map (BAM)  
   - [ ] ⭐ Bioinformatics Toolbox  
   - [ ] ⭐ Toolbox Documentation
 - [ ] 8. Automation and Design Files

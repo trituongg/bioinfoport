@@ -38,7 +38,7 @@ endif
 
 # =========================================
 #DEFINE GENOME HERE AND ALLOW INPUT FROM COMMAND LINE
-SRR_ID ?= SRR1972883
+SRR_ID ?= SRR1972739
 REFSEQ_ID ?= GCF_000848505.1
 # =========================================
 
@@ -97,7 +97,7 @@ help:
 
 # =========================================
 #building the entire workflow in one command
-build: download_refseq download_srr index align index_bam
+build: dirs download_refseq download_srr index align index_bam
 .PHONY: build
 # =========================================
 
@@ -110,7 +110,7 @@ build: download_refseq download_srr index align index_bam
 # Since we are downloading a zip file, we need to unzip it and find the fasta file inside and copy it to the reference directory with the name $(REFSEQ_ID).fna
 download_refseq: $(REFSEQ_FASTA)
 $(REFSEQ_FASTA):
-> datasets download genome accession $(REFSEQ_ID) --include genome,protein,gff3,cds,seq-report,rna --filename reference/$(REFSEQ_ID).zip
+> datasets download genome accession $(REFSEQ_ID) --include genome,protein,gff3 --filename reference/$(REFSEQ_ID).zip
 > unzip -o reference/$(REFSEQ_ID).zip -d reference/
 > find reference/ncbi_dataset/data -name "*.fna" -exec cp {} $@ \;
 > rm reference/$(REFSEQ_ID).zip

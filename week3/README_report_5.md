@@ -248,6 +248,21 @@ $(REFSEQ_FASTA):
 .PHONY: download_refseq
 # =========================================
 ```
+
+#### BUG FIX
+
+this code will get you the cds file for alignment = bad bad. You want the complete genome. That's why our alignment statsare so bad. Let's try again using this new code
+
+```
+download_refseq: $(REFSEQ_FASTA)
+$(REFSEQ_FASTA):
+> datasets download genome accession $(REFSEQ_ID) --include genome,protein,gff3 --filename reference/$(REFSEQ_ID).zip
+> unzip -o reference/$(REFSEQ_ID).zip -d reference/
+> find reference/ncbi_dataset/data -name "*.fna" -exec cp {} $@ \;
+> rm reference/$(REFSEQ_ID).zip
+.PHONY: download_refseq
+```
+
 Downloading the reference, and copying it to the reference file so that we can play with it later
 
 ```
@@ -392,3 +407,40 @@ To get the depth/coverage plot we can use
 - [x] All commands run successfully via Makefile  
 - [x] Repository is organized and reproducible  
 - [x] GitHub link is ready for submission  
+
+
+Since our alignment is horrendous, let's try change the SRR to something else: 
+Like ```SRR1972739```
+
+
+| SRR        | Mapping rate | Meaning                                 |
+|------------|--------------|-----------------------------------------|
+| SRR1972883 | 0.03%        | wrong context / mostly host or mismatch |
+| SRR1972886 | 2%           | partial compatibility                   |
+| SRR1972739 | **51%**      | usable dataset                          |
+
+
+```samtools flagstats alignment/SRR1972739.bam
+1553844 + 0 in total (QC-passed reads + QC-failed reads)
+1516674 + 0 primary
+0 + 0 secondary
+37170 + 0 supplementary
+0 + 0 duplicates
+0 + 0 primary duplicates
+803612 + 0 mapped (51.72% : N/A)
+766442 + 0 primary mapped (50.53% : N/A)
+1516674 + 0 paired in sequencing
+758337 + 0 read1
+758337 + 0 read2
+717768 + 0 properly paired (47.33% : N/A)
+725094 + 0 with itself and mate mapped
+41348 + 0 singletons (2.73% : N/A)
+0 + 0 with mate mapped to a different chr
+0 + 0 with mate mapped to a different chr (mapQ>=5)
+```
+Problem fixed
+![alt text](image-6.png)
+
+and filtering out only those that are mapped 
+
+![alt text](image-8.png)
