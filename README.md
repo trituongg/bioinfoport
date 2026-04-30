@@ -12,7 +12,7 @@ Start Date: 4/17/2026
 *unrelated picture from an unrelated project*
 
 
-## 📂 Project Overview
+## Project Overview
 
 ---
 
@@ -46,6 +46,13 @@ Start Date: 4/17/2026
 ---
 
 ## Week 3
+
+### 0. HIGHLIGHT
+
+![alt text](week3/image-9.png)
+
+The generation of this photo took 3 hours of alignment and a lot more trying to debug whatever bug happened up and downstream. 
+
 
 ### 1. Reports
 - [Report 5](week3/README_report_5.md)
