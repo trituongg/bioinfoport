@@ -3,7 +3,7 @@
 ## PREFACE
 Tri Tuong's place of data.
 
-Following https://www.biostarhandbook.com/fast/ and will be documenting my (hopefully) own personal projects here. 
+Following https://www.biostarhandbook.com/fast/ and will be documenting my (hopefully) own personal projects here. I will try to follow the coursework (at least somewhat). Assignments might be missing a lot of the presentation. 
 
 Start Date: 4/17/2026
 
@@ -13,6 +13,10 @@ Start Date: 4/17/2026
 
 
 ## Project Overview
+
+## TOOLBOXES 
+
+Access via ```https://github.com/ialbert/bio``` in the run section. 
 
 ---
 
@@ -53,16 +57,18 @@ Start Date: 4/17/2026
 
 The generation of this photo took 3 hours of alignment and a lot more trying to debug whatever bug happened up and downstream. 
 
-
 ### 1. Reports
 - [Report 5](week3/README_report_5.md)
 - [Report 6](week3/README_report_6.md)
+- [Report 7](week3/README_report_7.md) + [data](week3/design.csv) + [results](week3/results.txt)
 
 ### 2. Theory
 - [Scripting](week3/scripting.md)
 - [Vibecoding](week3/vibecoding.md)
 - [The wiggle format](week3/wiggle.md)
 - [Re: about .bam files](week3/bam.md)
+- [Toolbox?](week3/toolbox.md)
+
 
 
 ### 3. Templates
@@ -77,6 +83,7 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - [Coverage template](week3/coverage_template.sh)
 - [Example bam template](week3/example_bam_template.sh)
 - **[IMPROVED MAKEFILE](week3/Makefile_2.mk)**
+- **[MORE IMPROVED MAKEFILE](week3/Makefile_3.mk)**
 
 ---
 
@@ -93,10 +100,10 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - [x] 6. Short Read Alignments  
   - [x] ⭐ AI-Powered Makefiles
 - [x] 7. Binary Alignment Map (BAM)  
-  - [ ] ⭐ Bioinformatics Toolbox  
-  - [ ] ⭐ Toolbox Documentation
-- [ ] 8. Automation and Design Files
-- [ ] ⭐ Assignment 8 Review
+  - [x] ⭐ Bioinformatics Toolbox  
+  - [x] ⭐ Toolbox Documentation
+- [x] 8. Automation and Design Files
+- [x] ⭐ Assignment 8 Review
 - [ ] 9. Variant Calling and VCF
 - [ ] 10. Variant Effect Prediction
 - [ ] 11. Evaluating cancer variants  

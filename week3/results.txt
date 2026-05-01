@@ -1,0 +1,768 @@
+ head design.csv | parallel -j 4 --colsep ',' make build SRR_ID={1} SAMPLE_NAME={2} USE_SRA=yes READ_CEILING=100000
+Academic tradition requires you to cite works you base your article on.
+If you use programs that use GNU Parallel to process data for an article in a
+scientific publication, please cite:
+
+  Tange, O. (2026, January 22). GNU Parallel 20260122 ('Maduro').
+  Zenodo. https://doi.org/10.5281/zenodo.18395892
+
+This helps funding further development; AND IT WON'T COST YOU A CENT.
+If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
+
+More about funding GNU Parallel and the citation notice:
+https://www.gnu.org/software/parallel/parallel_design.html#citation-notice
+
+To silence this citation notice: run 'parallel --citation' once.
+
+mkdir -p        G5988.1/reads \
+                        G5988.1/alignment
+mkdir -p reference
+datasets download genome accession GCF_000848505.1 --include genome --filename reference/GCF_000848505.1.zip
+unzip -o reference/GCF_000848505.1.zip -d reference/
+find reference/ncbi_dataset/data -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) -exec cp {} reference/GCF_000848505.1.fna \;
+New version of client (18.25.1) available at https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets.
+Collecting 1 genome record [================================================] 100% 1/1
+Downloading: reference/GCF_000848505.1.zip    5.65kB 4.87MB/s
+Error: Internal error (invalid zip archive). Please try again
+
+Use datasets download genome accession <command> --help for detailed help about a command.
+
+make: *** [Makefile:149: reference/GCF_000848505.1.fna] Error 1
+make: *** Deleting file 'reference/GCF_000848505.1.fna'
+mkdir -p        G5985.1/reads \
+                        G5985.1/alignment
+mkdir -p reference
+datasets download genome accession GCF_000848505.1 --include genome --filename reference/GCF_000848505.1.zip
+unzip -o reference/GCF_000848505.1.zip -d reference/
+find reference/ncbi_dataset/data -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) -exec cp {} reference/GCF_000848505.1.fna \;
+New version of client (18.25.1) available at https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets.
+Collecting 1 genome record [================================================] 100% 1/1
+Downloading: reference/GCF_000848505.1.zip    5.8kB 118kB/s
+Error: Internal error (invalid zip archive). Please try again
+
+Use datasets download genome accession <command> --help for detailed help about a command.
+
+make: *** [Makefile:149: reference/GCF_000848505.1.fna] Error 1
+mkdir -p        G5570.1/reads \
+                        G5570.1/alignment
+mkdir -p reference
+datasets download genome accession GCF_000848505.1 --include genome --filename reference/GCF_000848505.1.zip
+unzip -o reference/GCF_000848505.1.zip -d reference/
+find reference/ncbi_dataset/data -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) -exec cp {} reference/GCF_000848505.1.fna \;
+Archive:  reference/GCF_000848505.1.zip
+  inflating: reference/README.md
+  inflating: reference/ncbi_dataset/data/assembly_data_report.jsonl
+  inflating: reference/ncbi_dataset/data/GCF_000848505.1/GCF_000848505.1_ViralProj14703_genomic.fna
+  inflating: reference/ncbi_dataset/data/dataset_catalog.json
+  inflating: reference/md5sum.txt
+mkdir -p G5570.1/reads
+fasterq-dump SRR1972886 \
+    --split-files \
+    --outdir G5570.1/reads \
+    --threads 8
+seqtk sample -s100 G5570.1/reads/SRR1972886_1.fastq 100000 > G5570.1/reads/tmp_1.fastq
+seqtk sample -s100 G5570.1/reads/SRR1972886_2.fastq 100000 > G5570.1/reads/tmp_2.fastq
+mv -f G5570.1/reads/tmp_1.fastq G5570.1/reads/SRR1972886_1.fastq
+mv -f G5570.1/reads/tmp_2.fastq G5570.1/reads/SRR1972886_2.fastq
+gzip -f G5570.1/reads/SRR1972886_1.fastq
+gzip -f G5570.1/reads/SRR1972886_2.fastq
+touch G5570.1/reads/SRR1972886.done
+fastqc -t 8 G5570.1/reads/SRR1972886.done -o G5570.1/reads/
+null
+Analysis complete for SRR1972886.done
+fastqc -t 8 G5570.1/reads/SRR1972886.done -o G5570.1/reads/
+null
+Analysis complete for SRR1972886.done
+samtools faidx reference/GCF_000848505.1.fna
+bwa index reference/GCF_000848505.1.fna
+bwa mem -t 8 reference/GCF_000848505.1.fna G5570.1/reads/SRR1972886_1.fastq.gz G5570.1/reads/SRR1972886_2.fastq.gz | pv | samtools sort -@ 8 -o G5570.1/alignment/G5570.1.bam
+samtools index G5570.1/alignment/G5570.1.bam
+micromamba run -n deep bamCoverage -b G5570.1/alignment/G5570.1.bam -o G5570.1/alignment/G5570.1.bw --numberOfProcessors 8
+samtools flagstat G5570.1/alignment/G5570.1.bam > samtools_stats.txt
+bamtools stats -in G5570.1/alignment/G5570.1.bam > bamtools_stats.txt
+New version of client (18.25.1) available at https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets.
+Collecting 1 genome record [================================================] 100% 1/1
+Downloading: reference/GCF_000848505.1.zip    9.15kB valid data package
+Validating package files [================================================] 100% 5/5
+spots read      : 147,680
+reads read      : 295,360
+reads written   : 295,360
+Started analysis of SRR1972886.done
+Started analysis of SRR1972886.done
+[bwa_index] Pack FASTA... 0.00 sec
+[bwa_index] Construct BWT for the packed sequence...
+[bwa_index] 0.01 seconds elapse.
+[bwa_index] Update BWT... 0.00 sec
+[bwa_index] Pack forward-only FASTA... 0.00 sec
+[bwa_index] Construct SA from BWT and Occ... 0.00 sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa index reference/GCF_000848505.1.fna
+[main] Real time: 0.083 sec; CPU: 0.019 sec
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (153, 848, 8, 146)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (60, 117, 175)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 405)
+[M::mem_pestat] mean and std.dev: (124.62, 79.28)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 520)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (167, 228, 291)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 539)
+[M::mem_pestat] mean and std.dev: (230.36, 86.09)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 663)
+[M::mem_pestat] skip orientation RF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (76, 143, 236)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 556)
+[M::mem_pestat] mean and std.dev: (150.06, 90.91)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 716)
+[M::mem_process_seqs] Processed 200000 reads in 11.504 CPU sec, 2.066 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G5570.1/reads/SRR1972886_1.fastq.gz G5570.1/reads/SRR1972886_2.fastq.gz
+[main] Real time: 2.521 sec; CPU: 11.899 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G5570.1/alignment/G5570.1.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
+mkdir -p        G5644.1/reads \
+                        G5644.1/alignment
+mkdir -p reference
+datasets download genome accession GCF_000848505.1 --include genome --filename reference/GCF_000848505.1.zip
+unzip -o reference/GCF_000848505.1.zip -d reference/
+find reference/ncbi_dataset/data -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) -exec cp {} reference/GCF_000848505.1.fna \;
+Archive:  reference/GCF_000848505.1.zip
+  inflating: reference/README.md
+  inflating: reference/ncbi_dataset/data/assembly_data_report.jsonl
+  inflating: reference/ncbi_dataset/data/GCF_000848505.1/GCF_000848505.1_ViralProj14703_genomic.fna
+  inflating: reference/ncbi_dataset/data/dataset_catalog.json
+  inflating: reference/md5sum.txt
+mkdir -p G5644.1/reads
+fasterq-dump SRR1972901 \
+    --split-files \
+    --outdir G5644.1/reads \
+    --threads 8
+seqtk sample -s100 G5644.1/reads/SRR1972901_1.fastq 100000 > G5644.1/reads/tmp_1.fastq
+seqtk sample -s100 G5644.1/reads/SRR1972901_2.fastq 100000 > G5644.1/reads/tmp_2.fastq
+mv -f G5644.1/reads/tmp_1.fastq G5644.1/reads/SRR1972901_1.fastq
+mv -f G5644.1/reads/tmp_2.fastq G5644.1/reads/SRR1972901_2.fastq
+gzip -f G5644.1/reads/SRR1972901_1.fastq
+gzip -f G5644.1/reads/SRR1972901_2.fastq
+touch G5644.1/reads/SRR1972901.done
+fastqc -t 8 G5644.1/reads/SRR1972901.done -o G5644.1/reads/
+null
+Analysis complete for SRR1972901.done
+fastqc -t 8 G5644.1/reads/SRR1972901.done -o G5644.1/reads/
+null
+Analysis complete for SRR1972901.done
+bwa mem -t 8 reference/GCF_000848505.1.fna G5644.1/reads/SRR1972901_1.fastq.gz G5644.1/reads/SRR1972901_2.fastq.gz | pv | samtools sort -@ 8 -o G5644.1/alignment/G5644.1.bam
+samtools index G5644.1/alignment/G5644.1.bam
+micromamba run -n deep bamCoverage -b G5644.1/alignment/G5644.1.bam -o G5644.1/alignment/G5644.1.bw --numberOfProcessors 8
+samtools flagstat G5644.1/alignment/G5644.1.bam > samtools_stats.txt
+bamtools stats -in G5644.1/alignment/G5644.1.bam > bamtools_stats.txt
+New version of client (18.25.1) available at https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets.
+Collecting 1 genome record [================================================] 100% 1/1
+Downloading: reference/GCF_000848505.1.zip    9.15kB valid data package
+Validating package files [================================================] 100% 5/5
+spots read      : 255,121
+reads read      : 510,242
+reads written   : 510,242
+Started analysis of SRR1972901.done
+Started analysis of SRR1972901.done
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (230, 1134, 8, 191)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (70, 118, 179)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 397)
+[M::mem_pestat] mean and std.dev: (125.99, 73.56)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 506)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (138, 193, 265)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 519)
+[M::mem_pestat] mean and std.dev: (205.05, 88.67)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 646)
+[M::mem_pestat] skip orientation RF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (73, 112, 186)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 412)
+[M::mem_pestat] mean and std.dev: (128.76, 72.15)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 525)
+[M::mem_process_seqs] Processed 200000 reads in 10.925 CPU sec, 2.143 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G5644.1/reads/SRR1972901_1.fastq.gz G5644.1/reads/SRR1972901_2.fastq.gz
+[main] Real time: 2.568 sec; CPU: 11.321 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G5644.1/alignment/G5644.1.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
+mkdir -p        G5997.1/reads \
+                        G5997.1/alignment
+mkdir -p reference
+datasets download genome accession GCF_000848505.1 --include genome --filename reference/GCF_000848505.1.zip
+unzip -o reference/GCF_000848505.1.zip -d reference/
+find reference/ncbi_dataset/data -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) -exec cp {} reference/GCF_000848505.1.fna \;
+Archive:  reference/GCF_000848505.1.zip
+  inflating: reference/README.md
+  inflating: reference/ncbi_dataset/data/assembly_data_report.jsonl
+  inflating: reference/ncbi_dataset/data/GCF_000848505.1/GCF_000848505.1_ViralProj14703_genomic.fna
+  inflating: reference/ncbi_dataset/data/dataset_catalog.json
+  inflating: reference/md5sum.txt
+mkdir -p G5997.1/reads
+fasterq-dump SRR1972962 \
+    --split-files \
+    --outdir G5997.1/reads \
+    --threads 8
+seqtk sample -s100 G5997.1/reads/SRR1972962_1.fastq 100000 > G5997.1/reads/tmp_1.fastq
+seqtk sample -s100 G5997.1/reads/SRR1972962_2.fastq 100000 > G5997.1/reads/tmp_2.fastq
+mv -f G5997.1/reads/tmp_1.fastq G5997.1/reads/SRR1972962_1.fastq
+mv -f G5997.1/reads/tmp_2.fastq G5997.1/reads/SRR1972962_2.fastq
+gzip -f G5997.1/reads/SRR1972962_1.fastq
+gzip -f G5997.1/reads/SRR1972962_2.fastq
+touch G5997.1/reads/SRR1972962.done
+fastqc -t 8 G5997.1/reads/SRR1972962.done -o G5997.1/reads/
+null
+Analysis complete for SRR1972962.done
+fastqc -t 8 G5997.1/reads/SRR1972962.done -o G5997.1/reads/
+null
+Analysis complete for SRR1972962.done
+bwa mem -t 8 reference/GCF_000848505.1.fna G5997.1/reads/SRR1972962_1.fastq.gz G5997.1/reads/SRR1972962_2.fastq.gz | pv | samtools sort -@ 8 -o G5997.1/alignment/G5997.1.bam
+samtools index G5997.1/alignment/G5997.1.bam
+micromamba run -n deep bamCoverage -b G5997.1/alignment/G5997.1.bam -o G5997.1/alignment/G5997.1.bw --numberOfProcessors 8
+samtools flagstat G5997.1/alignment/G5997.1.bam > samtools_stats.txt
+bamtools stats -in G5997.1/alignment/G5997.1.bam > bamtools_stats.txt
+New version of client (18.25.1) available at https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets.
+Collecting 1 genome record [================================================] 100% 1/1
+Downloading: reference/GCF_000848505.1.zip    9.15kB valid data package
+Validating package files [================================================] 100% 5/5
+spots read      : 354,806
+reads read      : 709,612
+reads written   : 709,612
+Started analysis of SRR1972962.done
+Started analysis of SRR1972962.done
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (362, 2302, 6, 317)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (71, 133, 183)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 407)
+[M::mem_pestat] mean and std.dev: (135.02, 77.71)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 519)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (123, 174, 251)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 507)
+[M::mem_pestat] mean and std.dev: (192.15, 91.60)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 635)
+[M::mem_pestat] skip orientation RF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (68, 124, 180)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 404)
+[M::mem_pestat] mean and std.dev: (126.48, 69.91)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 516)
+[M::mem_process_seqs] Processed 200000 reads in 11.107 CPU sec, 2.253 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G5997.1/reads/SRR1972962_1.fastq.gz G5997.1/reads/SRR1972962_2.fastq.gz
+[main] Real time: 2.737 sec; CPU: 11.563 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G5997.1/alignment/G5997.1.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
+mkdir -p        G5735.2/reads \
+                        G5735.2/alignment
+mkdir -p reference
+datasets download genome accession GCF_000848505.1 --include genome --filename reference/GCF_000848505.1.zip
+unzip -o reference/GCF_000848505.1.zip -d reference/
+find reference/ncbi_dataset/data -type f \( -name "*.fna" -o -name "*.fa" -o -name "*.fasta" \) -exec cp {} reference/GCF_000848505.1.fna \;
+Archive:  reference/GCF_000848505.1.zip
+  inflating: reference/README.md
+  inflating: reference/ncbi_dataset/data/assembly_data_report.jsonl
+  inflating: reference/ncbi_dataset/data/GCF_000848505.1/GCF_000848505.1_ViralProj14703_genomic.fna
+  inflating: reference/ncbi_dataset/data/dataset_catalog.json
+  inflating: reference/md5sum.txt
+mkdir -p G5735.2/reads
+fasterq-dump SRR1972920 \
+    --split-files \
+    --outdir G5735.2/reads \
+    --threads 8
+seqtk sample -s100 G5735.2/reads/SRR1972920_1.fastq 100000 > G5735.2/reads/tmp_1.fastq
+seqtk sample -s100 G5735.2/reads/SRR1972920_2.fastq 100000 > G5735.2/reads/tmp_2.fastq
+mv -f G5735.2/reads/tmp_1.fastq G5735.2/reads/SRR1972920_1.fastq
+mv -f G5735.2/reads/tmp_2.fastq G5735.2/reads/SRR1972920_2.fastq
+gzip -f G5735.2/reads/SRR1972920_1.fastq
+gzip -f G5735.2/reads/SRR1972920_2.fastq
+touch G5735.2/reads/SRR1972920.done
+fastqc -t 8 G5735.2/reads/SRR1972920.done -o G5735.2/reads/
+null
+Analysis complete for SRR1972920.done
+fastqc -t 8 G5735.2/reads/SRR1972920.done -o G5735.2/reads/
+null
+Analysis complete for SRR1972920.done
+bwa mem -t 8 reference/GCF_000848505.1.fna G5735.2/reads/SRR1972920_1.fastq.gz G5735.2/reads/SRR1972920_2.fastq.gz | pv | samtools sort -@ 8 -o G5735.2/alignment/G5735.2.bam
+samtools index G5735.2/alignment/G5735.2.bam
+micromamba run -n deep bamCoverage -b G5735.2/alignment/G5735.2.bam -o G5735.2/alignment/G5735.2.bw --numberOfProcessors 8
+samtools flagstat G5735.2/alignment/G5735.2.bam > samtools_stats.txt
+bamtools stats -in G5735.2/alignment/G5735.2.bam > bamtools_stats.txt
+New version of client (18.25.1) available at https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets.
+Collecting 1 genome record [================================================] 100% 1/1
+Downloading: reference/GCF_000848505.1.zip    9.15kB valid data package
+Validating package files [================================================] 100% 5/5
+spots read      : 320,773
+reads read      : 641,546
+reads written   : 641,546
+Started analysis of SRR1972920.done
+Started analysis of SRR1972920.done
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (7, 74, 1, 15)
+[M::mem_pestat] skip orientation FF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (95, 152, 213)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 449)
+[M::mem_pestat] mean and std.dev: (167.11, 91.07)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 567)
+[M::mem_pestat] skip orientation RF as there are not enough pairs
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (58, 101, 137)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 295)
+[M::mem_pestat] mean and std.dev: (89.43, 42.19)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 374)
+[M::mem_process_seqs] Processed 200000 reads in 9.935 CPU sec, 1.799 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G5735.2/reads/SRR1972920_1.fastq.gz G5735.2/reads/SRR1972920_2.fastq.gz
+[main] Real time: 2.297 sec; CPU: 10.381 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G5735.2/alignment/G5735.2.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
+mkdir -p        G5640.1/reads \
+                        G5640.1/alignment
+mkdir -p G5640.1/reads
+fasterq-dump SRR1972900 \
+    --split-files \
+    --outdir G5640.1/reads \
+    --threads 8
+seqtk sample -s100 G5640.1/reads/SRR1972900_1.fastq 100000 > G5640.1/reads/tmp_1.fastq
+seqtk sample -s100 G5640.1/reads/SRR1972900_2.fastq 100000 > G5640.1/reads/tmp_2.fastq
+mv -f G5640.1/reads/tmp_1.fastq G5640.1/reads/SRR1972900_1.fastq
+mv -f G5640.1/reads/tmp_2.fastq G5640.1/reads/SRR1972900_2.fastq
+gzip -f G5640.1/reads/SRR1972900_1.fastq
+gzip -f G5640.1/reads/SRR1972900_2.fastq
+touch G5640.1/reads/SRR1972900.done
+fastqc -t 8 G5640.1/reads/SRR1972900.done -o G5640.1/reads/
+null
+Analysis complete for SRR1972900.done
+fastqc -t 8 G5640.1/reads/SRR1972900.done -o G5640.1/reads/
+null
+Analysis complete for SRR1972900.done
+bwa mem -t 8 reference/GCF_000848505.1.fna G5640.1/reads/SRR1972900_1.fastq.gz G5640.1/reads/SRR1972900_2.fastq.gz | pv | samtools sort -@ 8 -o G5640.1/alignment/G5640.1.bam
+samtools index G5640.1/alignment/G5640.1.bam
+micromamba run -n deep bamCoverage -b G5640.1/alignment/G5640.1.bam -o G5640.1/alignment/G5640.1.bw --numberOfProcessors 8
+samtools flagstat G5640.1/alignment/G5640.1.bam > samtools_stats.txt
+bamtools stats -in G5640.1/alignment/G5640.1.bam > bamtools_stats.txt
+spots read      : 394,092
+reads read      : 788,184
+reads written   : 788,184
+Started analysis of SRR1972900.done
+Started analysis of SRR1972900.done
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (380, 1562, 10, 260)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (76, 140, 216)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 496)
+[M::mem_pestat] mean and std.dev: (153.23, 92.62)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 636)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (139, 184, 257)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 493)
+[M::mem_pestat] mean and std.dev: (201.36, 88.04)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 611)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (55, 102, 156)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 358)
+[M::mem_pestat] mean and std.dev: (88.62, 45.75)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 459)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (85, 150, 249)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 577)
+[M::mem_pestat] mean and std.dev: (163.24, 96.01)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 741)
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 200000 reads in 11.046 CPU sec, 2.132 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G5640.1/reads/SRR1972900_1.fastq.gz G5640.1/reads/SRR1972900_2.fastq.gz
+[main] Real time: 2.660 sec; CPU: 11.520 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G5640.1/alignment/G5640.1.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
+mkdir -p        G6104.1/reads \
+                        G6104.1/alignment
+mkdir -p G6104.1/reads
+fasterq-dump SRR1972973 \
+    --split-files \
+    --outdir G6104.1/reads \
+    --threads 8
+seqtk sample -s100 G6104.1/reads/SRR1972973_1.fastq 100000 > G6104.1/reads/tmp_1.fastq
+seqtk sample -s100 G6104.1/reads/SRR1972973_2.fastq 100000 > G6104.1/reads/tmp_2.fastq
+mv -f G6104.1/reads/tmp_1.fastq G6104.1/reads/SRR1972973_1.fastq
+mv -f G6104.1/reads/tmp_2.fastq G6104.1/reads/SRR1972973_2.fastq
+gzip -f G6104.1/reads/SRR1972973_1.fastq
+gzip -f G6104.1/reads/SRR1972973_2.fastq
+touch G6104.1/reads/SRR1972973.done
+fastqc -t 8 G6104.1/reads/SRR1972973.done -o G6104.1/reads/
+null
+Analysis complete for SRR1972973.done
+fastqc -t 8 G6104.1/reads/SRR1972973.done -o G6104.1/reads/
+null
+Analysis complete for SRR1972973.done
+bwa mem -t 8 reference/GCF_000848505.1.fna G6104.1/reads/SRR1972973_1.fastq.gz G6104.1/reads/SRR1972973_2.fastq.gz | pv | samtools sort -@ 8 -o G6104.1/alignment/G6104.1.bam
+samtools index G6104.1/alignment/G6104.1.bam
+micromamba run -n deep bamCoverage -b G6104.1/alignment/G6104.1.bam -o G6104.1/alignment/G6104.1.bw --numberOfProcessors 8
+samtools flagstat G6104.1/alignment/G6104.1.bam > samtools_stats.txt
+bamtools stats -in G6104.1/alignment/G6104.1.bam > bamtools_stats.txt
+spots read      : 409,659
+reads read      : 819,318
+reads written   : 819,318
+Started analysis of SRR1972973.done
+Started analysis of SRR1972973.done
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (6572, 19966, 132, 4196)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (72, 122, 185)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 411)
+[M::mem_pestat] mean and std.dev: (135.10, 80.48)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 524)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (125, 180, 259)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 527)
+[M::mem_pestat] mean and std.dev: (197.44, 95.45)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 661)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (40, 72, 148)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 364)
+[M::mem_pestat] mean and std.dev: (92.85, 77.84)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 472)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (66, 117, 181)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 411)
+[M::mem_pestat] mean and std.dev: (130.14, 78.84)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 526)
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 200000 reads in 14.292 CPU sec, 2.740 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G6104.1/reads/SRR1972973_1.fastq.gz G6104.1/reads/SRR1972973_2.fastq.gz
+[main] Real time: 3.180 sec; CPU: 14.677 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G6104.1/alignment/G6104.1.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
+mkdir -p        G5982.1/reads \
+                        G5982.1/alignment
+mkdir -p G5982.1/reads
+fasterq-dump SRR1972956 \
+    --split-files \
+    --outdir G5982.1/reads \
+    --threads 8
+seqtk sample -s100 G5982.1/reads/SRR1972956_1.fastq 100000 > G5982.1/reads/tmp_1.fastq
+seqtk sample -s100 G5982.1/reads/SRR1972956_2.fastq 100000 > G5982.1/reads/tmp_2.fastq
+mv -f G5982.1/reads/tmp_1.fastq G5982.1/reads/SRR1972956_1.fastq
+mv -f G5982.1/reads/tmp_2.fastq G5982.1/reads/SRR1972956_2.fastq
+gzip -f G5982.1/reads/SRR1972956_1.fastq
+gzip -f G5982.1/reads/SRR1972956_2.fastq
+touch G5982.1/reads/SRR1972956.done
+fastqc -t 8 G5982.1/reads/SRR1972956.done -o G5982.1/reads/
+null
+Analysis complete for SRR1972956.done
+fastqc -t 8 G5982.1/reads/SRR1972956.done -o G5982.1/reads/
+null
+Analysis complete for SRR1972956.done
+bwa mem -t 8 reference/GCF_000848505.1.fna G5982.1/reads/SRR1972956_1.fastq.gz G5982.1/reads/SRR1972956_2.fastq.gz | pv | samtools sort -@ 8 -o G5982.1/alignment/G5982.1.bam
+samtools index G5982.1/alignment/G5982.1.bam
+micromamba run -n deep bamCoverage -b G5982.1/alignment/G5982.1.bam -o G5982.1/alignment/G5982.1.bw --numberOfProcessors 8
+samtools flagstat G5982.1/alignment/G5982.1.bam > samtools_stats.txt
+bamtools stats -in G5982.1/alignment/G5982.1.bam > bamtools_stats.txt
+spots read      : 410,593
+reads read      : 821,186
+reads written   : 821,186
+Started analysis of SRR1972956.done
+Started analysis of SRR1972956.done
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (895, 4919, 18, 551)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (65, 117, 182)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 416)
+[M::mem_pestat] mean and std.dev: (131.81, 80.48)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 533)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (118, 163, 232)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 460)
+[M::mem_pestat] mean and std.dev: (180.10, 84.65)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 574)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (61, 61, 195)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 463)
+[M::mem_pestat] mean and std.dev: (105.06, 71.12)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 597)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (61, 103, 172)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 394)
+[M::mem_pestat] mean and std.dev: (122.74, 78.09)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 505)
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 200000 reads in 11.219 CPU sec, 2.107 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G5982.1/reads/SRR1972956_1.fastq.gz G5982.1/reads/SRR1972956_2.fastq.gz
+[main] Real time: 2.653 sec; CPU: 11.774 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G5982.1/alignment/G5982.1.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
+mkdir -p        G5898.1/reads \
+                        G5898.1/alignment
+mkdir -p G5898.1/reads
+fasterq-dump SRR1972955 \
+    --split-files \
+    --outdir G5898.1/reads \
+    --threads 8
+seqtk sample -s100 G5898.1/reads/SRR1972955_1.fastq 100000 > G5898.1/reads/tmp_1.fastq
+seqtk sample -s100 G5898.1/reads/SRR1972955_2.fastq 100000 > G5898.1/reads/tmp_2.fastq
+mv -f G5898.1/reads/tmp_1.fastq G5898.1/reads/SRR1972955_1.fastq
+mv -f G5898.1/reads/tmp_2.fastq G5898.1/reads/SRR1972955_2.fastq
+gzip -f G5898.1/reads/SRR1972955_1.fastq
+gzip -f G5898.1/reads/SRR1972955_2.fastq
+touch G5898.1/reads/SRR1972955.done
+fastqc -t 8 G5898.1/reads/SRR1972955.done -o G5898.1/reads/
+null
+Analysis complete for SRR1972955.done
+fastqc -t 8 G5898.1/reads/SRR1972955.done -o G5898.1/reads/
+null
+Analysis complete for SRR1972955.done
+bwa mem -t 8 reference/GCF_000848505.1.fna G5898.1/reads/SRR1972955_1.fastq.gz G5898.1/reads/SRR1972955_2.fastq.gz | pv | samtools sort -@ 8 -o G5898.1/alignment/G5898.1.bam
+samtools index G5898.1/alignment/G5898.1.bam
+micromamba run -n deep bamCoverage -b G5898.1/alignment/G5898.1.bam -o G5898.1/alignment/G5898.1.bw --numberOfProcessors 8
+samtools flagstat G5898.1/alignment/G5898.1.bam > samtools_stats.txt
+bamtools stats -in G5898.1/alignment/G5898.1.bam > bamtools_stats.txt
+spots read      : 421,386
+reads read      : 842,772
+reads written   : 842,772
+Started analysis of SRR1972955.done
+Started analysis of SRR1972955.done
+[M::bwa_idx_load_from_disk] read 0 ALT contigs
+[M::process] read 200000 sequences (20200000 bp)...
+[M::mem_pestat] # candidate unique pairs for (FF, FR, RF, RR): (1394, 8346, 41, 932)
+[M::mem_pestat] analyzing insert size distribution for orientation FF...
+[M::mem_pestat] (25, 50, 75) percentile: (69, 127, 197)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 453)
+[M::mem_pestat] mean and std.dev: (140.88, 89.21)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 581)
+[M::mem_pestat] analyzing insert size distribution for orientation FR...
+[M::mem_pestat] (25, 50, 75) percentile: (128, 180, 262)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 530)
+[M::mem_pestat] mean and std.dev: (198.59, 94.85)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 664)
+[M::mem_pestat] analyzing insert size distribution for orientation RF...
+[M::mem_pestat] (25, 50, 75) percentile: (52, 52, 145)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 331)
+[M::mem_pestat] mean and std.dev: (70.81, 53.08)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 424)
+[M::mem_pestat] analyzing insert size distribution for orientation RR...
+[M::mem_pestat] (25, 50, 75) percentile: (64, 113, 183)
+[M::mem_pestat] low and high boundaries for computing mean and std.dev: (1, 421)
+[M::mem_pestat] mean and std.dev: (129.74, 84.06)
+[M::mem_pestat] low and high boundaries for proper pairs: (1, 540)
+[M::mem_pestat] skip orientation RF
+[M::mem_process_seqs] Processed 200000 reads in 12.501 CPU sec, 1.865 real sec
+[main] Version: 0.7.19-r1273
+[main] CMD: bwa mem -t 8 reference/GCF_000848505.1.fna G5898.1/reads/SRR1972955_1.fastq.gz G5898.1/reads/SRR1972955_2.fastq.gz
+[main] Real time: 2.428 sec; CPU: 13.009 sec
+[bam_sort_core] merging from 0 files and 8 in-memory blocks...
+bamFilesList: ['G5898.1/alignment/G5898.1.bam']
+binLength: 50
+numberOfSamples: None
+blackListFileName: None
+skipZeroOverZero: False
+bed_and_bin: False
+genomeChunkSize: None
+defaultFragmentLength: read length
+numberOfProcessors: 8
+verbose: False
+region: None
+bedFile: None
+minMappingQuality: None
+ignoreDuplicates: False
+chrsToSkip: []
+stepSize: 50
+center_read: False
+samFlag_include: None
+samFlag_exclude: None
+minFragmentLength: 0
+maxFragmentLength: 0
+zerosToNans: False
+smoothLength: None
+save_data: False
+out_file_for_raw_data: None
+maxPairedFragmentLength: 1000
