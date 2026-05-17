@@ -85,7 +85,10 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - **[IMPROVED MAKEFILE](week3/Makefile_2.mk)**
 - **[MORE IMPROVED MAKEFILE](week3/Makefile_3.mk)**
 
----
+## Week 4
+
+- [Report 8][week4/README_report8.md]
+- [Update make][week4/Makefile_4.mk]
 
 
 ## PROGRESS BAR
@@ -104,7 +107,7 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
   - [x] ⭐ Toolbox Documentation
 - [x] 8. Automation and Design Files
 - [x] ⭐ Assignment 8 Review
-- [ ] 9. Variant Calling and VCF
+- [x] 9. Variant Calling and VCF
 - [ ] 10. Variant Effect Prediction
 - [ ] 11. Evaluating cancer variants  
   - [ ] ⭐ Code: Genome in a Bottle
