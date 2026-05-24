@@ -88,7 +88,7 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 ## Week 4
 
 - [Report 8][week4/README_report8.md]
-- [Update make][week4/Makefile_4.mk]
+- [Updated make][week4/Makefile_4.mk]
 
 
 ## PROGRESS BAR
