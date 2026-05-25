@@ -90,6 +90,15 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - **[REPORT 8](week4/README_report8.md)**
 - [NEW MAKE](week4/Makefile_4.mk)
 
+## Week 5
+
+- [Report 9](week5/README_REPORT9.md)
+- [VCF MAKE](week5/vcf.mk)
+
+### HIGHLIGHT
+
+![alt text](image.png)
+
 
 ## PROGRESS BAR
 
