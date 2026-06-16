@@ -48,5 +48,3 @@ clean:
 > rm -f $(VCF_FILE) $(VCF_FILE).gz $(VCF_FILE).norm.gz $(VCF_FILE).sorted.gz
 > echo "Cleanup complete."	
 
-
-
