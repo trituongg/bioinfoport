@@ -94,6 +94,7 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 
 - [Report 9](week5/README_REPORT9.md)
 - [VCF MAKE](week5/vcf.mk)
+- [VEP](week5/veper.mk)
 
 ### HIGHLIGHT
 
@@ -117,7 +118,7 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - [x] 8. Automation and Design Files
 - [x] ⭐ Assignment 8 Review
 - [x] 9. Variant Calling and VCF
-- [ ] 10. Variant Effect Prediction
+- [x] 10. Variant Effect Prediction
 - [ ] 11. Evaluating cancer variants  
   - [ ] ⭐ Code: Genome in a Bottle
 - [ ] 12. Introduction to RNA-Seq
