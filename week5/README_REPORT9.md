@@ -64,6 +64,35 @@ Here is an example run of it using the bio code src makefile cookbook
 
 As for ```VEP``` it is the (Ensemble) Variant effect predictor.
 
+You can use using this template of command and tinker with your liking 
+With the follow variables set
+
+```
+INPUT=/home/tristuowngf/week10/VEP_RUN/ebola/sample1/vcf/sample1.vcf.gz
+OUTPUT=/home/tristuowngf/week10/VEP_RUN/ebola_output/sample1.vep.vcf
+GFF=/home/tristuowngf/week10/VEP_RUN/gff/Ebola.Mayinga.1976.gff.gz
+FASTA=/home/tristuowngf/week10/VEP_RUN/ebola/reference/GCF_000848505.1.fna
+THREADS=4
+```
+
+```$ vep   -i $INPUT   -o $OUTPUT   --gff $GFF   --fasta $FASTA    --vcf   --everything   --verbose```
+
+However we can not have the ```species``` if we also remove the ```cache```
+
+Here is a run for the Ebola
+
+![alt text](image-4.png)
+
+Here is the command and run for the trametes sanguinea
+```
+INPUT=/home/tristuowngf/week10/VEP_RUN/trametes/T3.vcf.gz
+OUTPUT=/home/tristuowngf/week10/VEP_RUN/trametes_output/T3.vep.vcf
+GFF=/home/tristuowngf/week10/VEP_RUN/gff/Trametes.sanguinea.gff.gz
+FASTA=/home/tristuowngf/week10/VEP_RUN/trametes/reference/GCA_050630565.1.fna
+THREADS=4
+ vep   -i $INPUT   -o $OUTPUT   --gff $GFF   --fasta $FASTA    --vcf   --everything   --verbose
+```
+
 And how do predictors find these? Basically
 
 - Correlate the location of the variant with genomic annotation (that's why we need GTF files during prediction)
@@ -89,15 +118,39 @@ VEP also have an online interface.
 
 * [x] Write a Makefile.
 
-We will do a continuation of last week's makefile
+- [MAKEFILE](veper.mk)
 
-* [ ] Write a Markdown file.
-* [ ] Reuse the Makefile developed for your previous assignment, which generated a VCF file.
-* [ ] Load up and visualize the annotation file in GFF format.
-* [ ] Evaluate the effects of at least 3 variants in your VCF file.
-* [ ] Use a variant effect prediction tool like snpEff or VEP.
-* [ ] If, for some reason, you can't make any of the variant effect prediction software work, use visual inspection via IGV instead to describe the effect of variants relative to a reference genome and the annotation file.
-* [ ] Try to identify variants with different effects.
-* [ ] Write a Markdown report that summarizes the process and your result.
+* [x] Write a Markdown file.
+This file
 
+* [x] Reuse the Makefile developed for your previous assignment, which generated a VCF file.
 
+* [x] Load up and visualize the annotation file in GFF format.
+
+![alt text](image-5.png)
+
+* [x] Evaluate the effects of at least 3 variants in your VCF file.
+* [x] Use a variant effect prediction tool like snpEff or VEP.
+* [x] If, for some reason, you can't make any of the variant effect prediction software work, use visual inspection via IGV instead to describe the effect of variants relative to a reference genome and the annotation file.
+* [x] Try to identify variants with different effects.
+* [x] Write a Markdown report that summarizes the process and your result.
+
+### VARIANT 1
+
+![alt text](image-6.png)
+
+This is a type of upstream variant in the 5'UTR region. Possibly in the regulation of genes rather than changing any core amino acids
+The variant have extremely high quality of "59" and also have depth of "245". 
+This is a base substituation of 2 pyrimidines so the effect might not be very drastic. 
+
+### VARIANT 2
+
+![alt text](image-7.png)
+
+This is almost the same as the previous ones, between purines A->Gs, in 3'UTR region, probably affect only regulation and not very drastic.
+
+### VARIANT 3
+
+![alt text](image-8.png)
+
+This is almost the sameas variant 2 but this is wayyy rarer, changing from pyrimidine to pyrine T->A
