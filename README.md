@@ -101,6 +101,12 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 ![alt text](image.png)
 
 
+## README REPORTS 
+- [10](week67891011/README_REPORT_10.md)
+
+### 12 - RNA-SEQ
+- [RNA-SEQ-README](rnaseq/RNA_SEQ_README.md)
+
 ## PROGRESS BAR
 
 - [x] 1. Introduction to the course
@@ -119,8 +125,8 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - [x] ⭐ Assignment 8 Review
 - [x] 9. Variant Calling and VCF
 - [x] 10. Variant Effect Prediction
-- [ ] 11. Evaluating cancer variants  
-  - [ ] ⭐ Code: Genome in a Bottle
+- [x] 11. Evaluating cancer variants (SEMI DONE)
+  - [x] ⭐ Code: Genome in a Bottle (SEMI DONE)
 - [ ] 12. Introduction to RNA-Seq
 - [ ] 13. RNA-Seq differential expression
 - [ ] 14. Gene Ontologies and Functional Enrichment
