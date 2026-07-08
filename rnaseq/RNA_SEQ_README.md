@@ -589,3 +589,17 @@ Not very strange since we are only mapping to chromosome 19 which is a lottery t
 Too much noise and can't really differentiate between the 2 groups. 
 - [x] Write README (dataset, pipeline, how to reproduce)
 - [x] Discuss count matrix rows + compare to IGV tracks
+
+Nothing significant
+![alt text](Gm16470_19_40200826-40201823.png)
+┌─────────┬──────────────┬────────────────┬────────┬──────┐
+│  gene   │ Control mean │ Treatment mean │ log2FC │ padj │
+├─────────┼──────────────┼────────────────┼────────┼──────┤
+│ Sf3b2   │ 150.8        │ 142.0          │ -0.1   │ 1.0  │
+├─────────┼──────────────┼────────────────┼────────┼──────┤
+│ Gm16470 │ 2285.0       │ 1984.0         │ -0.3   │ 1.0  │
+├─────────┼──────────────┼────────────────┼────────┼──────┤
+│ Gm20762 │ 190.8        │ 188.5          │ 0.0    │ 1.0  │
+├─────────┼──────────────┼────────────────┼────────┼──────┤
+│ Cfl1    │ 255.8        │ 258.8          │ 0.0    │ 1.0  │
+└─────────┴──────────────┴────────────────┴────────┴──────┘
