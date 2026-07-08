@@ -106,6 +106,7 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 
 ### 12 - RNA-SEQ
 - [RNA-SEQ-README](rnaseq/RNA_SEQ_README.md)
+- [RNA-SEQ-MAKEFILE](rnaseq/rnaseq.mk)
 
 ## PROGRESS BAR
 
@@ -127,6 +128,6 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - [x] 10. Variant Effect Prediction
 - [x] 11. Evaluating cancer variants (SEMI DONE)
   - [x] ⭐ Code: Genome in a Bottle (SEMI DONE)
-- [ ] 12. Introduction to RNA-Seq
+- [x] 12. Introduction to RNA-Seq
 - [ ] 13. RNA-Seq differential expression
 - [ ] 14. Gene Ontologies and Functional Enrichment
