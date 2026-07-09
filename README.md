@@ -108,6 +108,13 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - [RNA-SEQ-README](rnaseq/RNA_SEQ_README.md)
 - [RNA-SEQ-MAKEFILE](rnaseq/rnaseq.mk)
 
+### 13 - RNA-SEQ-2-PLOTS
+- [RNA-SEQ-2-README](diffex/RNA-SEQ-2.md)
+- [RNA-SEQ-2-MAKEFILE](rnaseq/rnaseq2.mk)
+
+Highlight
+![alt text](image-1.png)
+
 ## PROGRESS BAR
 
 - [x] 1. Introduction to the course
@@ -129,5 +136,5 @@ The generation of this photo took 3 hours of alignment and a lot more trying to 
 - [x] 11. Evaluating cancer variants (SEMI DONE)
   - [x] ⭐ Code: Genome in a Bottle (SEMI DONE)
 - [x] 12. Introduction to RNA-Seq
-- [ ] 13. RNA-Seq differential expression
+- [x] 13. RNA-Seq differential expression
 - [ ] 14. Gene Ontologies and Functional Enrichment
